@@ -30,7 +30,9 @@ Example: https://docs.google.com/spreadsheets/d/e/2PACX-1vTIxCFi4KCY6IvBPoHJJBu1
 The idea is that in that way, you can just write the words that describe your stickers, and the system will take care of expanding it into a full list of triggers.
 
 Both of these are hosted on Google Spreadsheet, which is, at least currently, a pretty nice backend for this kind of storage:
+
 https://docs.google.com/spreadsheets/d/12z6Sh7CaVbk5p9HPZKMbd_s0EA1Jqo_TAB92Y6DgizU/edit#gid=0
+
 Incidentally the first row is fixed as an example but anyone should be able to add anything to the doc, so if you want to make a public repository, knock yourself out!
 
 You can provide your own CSVs in the options of the extension.
