@@ -69,9 +69,24 @@ function preloadAndCheck(url, data) {
   return url;
 }
 
+function loadCSV(url, callback) {
+	file = new XMLHttpRequest();
+	file.onreadystatechange = function() {
+		if (file.readyState == XMLHttpRequest.DONE) {
+			if(file.status === 200 || file.status == 0) {
+				callback(file.responseText);
+			}
+		}
+	}
+	file.open("GET", url, true);
+	file.setRequestHeader('Access-Control-Allow-Headers', '*');
+	file.setRequestHeader('Content-type', 'text/csv');
+	file.setRequestHeader('Access-Control-Allow-Origin', '*');
+	file.send(null);
+}
 
 // -----------------------------------------------------------------------------
-// HACK: stickers loading ------------------------------------------------------
+// HACK: CSVs loading ----------------------------------------------------------
 // -----------------------------------------------------------------------------
 
 function randomizeStickers() {
@@ -95,6 +110,7 @@ function randomizeStickers() {
 	console.log(">> STICKER DICTIONARY RANDOMIZED");
 }
 
+// CSV FORMAT (with headers): URL, word, word, word...
 function populateStickersFromFile(stickers_file) {
 	var lines = stickers_file.split('\n');
 	for(var l_i = 1; l_i < lines.length; l_i++){
@@ -127,29 +143,11 @@ function populateStickersFromFile(stickers_file) {
 }
 
 function loadStickersIndex() {
-	// CSV FORMAT (with headers): URL, word, word, word...
-  stickers_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=1525517825&single=true&output=csv";
-  stickers_file = new XMLHttpRequest();
-	stickers_file.onreadystatechange = function() {
-		if (stickers_file.readyState == XMLHttpRequest.DONE) {
-			if(stickers_file.status === 200 || stickers_file.status == 0)
-			{
-				populateStickersFromFile(stickers_file.responseText);
-			}
-		}
-	};
-  stickers_file.open("GET", stickers_url, true);
-  stickers_file.setRequestHeader('Access-Control-Allow-Headers', '*');
-  stickers_file.setRequestHeader('Content-type', 'text/csv');
-  stickers_file.setRequestHeader('Access-Control-Allow-Origin', '*');
-  stickers_file.send(null);
+  loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=1525517825&single=true&output=csv",
+          populateStickersFromFile);
 }
 
-
-// -----------------------------------------------------------------------------
-// HACK: keywords loading ------------------------------------------------------
-// -----------------------------------------------------------------------------
-
+// CSV FORMAT (with headers): KEY, word, word, word...
 function populateKeywordsFromFile(keywords_file) {
 	var lines = keywords_file.split('\n');
 	for(var l_i = 1; l_i < lines.length; l_i++){
@@ -161,21 +159,8 @@ function populateKeywordsFromFile(keywords_file) {
 }
 
 function loadKeywords() {
-	// CSV FORMAT (with headers): KEY, word, word, word...
-	keywords_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=312853833&single=true&output=csv";
-	keywords_file = new XMLHttpRequest();
-	keywords_file.onreadystatechange = function() {
-		if (keywords_file.readyState == XMLHttpRequest.DONE) {
-			if(keywords_file.status === 200 || keywords_file.status == 0) {
-				populateKeywordsFromFile(keywords_file.responseText);
-			}
-		}
-	}
-	keywords_file.open("GET", keywords_url, true);
-	keywords_file.setRequestHeader('Access-Control-Allow-Headers', '*');
-	keywords_file.setRequestHeader('Content-type', 'text/csv');
-	keywords_file.setRequestHeader('Access-Control-Allow-Origin', '*');
-	keywords_file.send(null);
+	loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=312853833&single=true&output=csv",
+          populateKeywordsFromFile);
 }
 
 loadKeywords();
