@@ -20,7 +20,7 @@ function c_core() {
 	else if (typeof arguments[i] === 'string' || arguments[i] instanceof String ) {
 		array.push(arguments[i]);
 	}
-	else {	
+	else {
 		for (var j = 0; j < arguments[i].length; j++) {
 			var development = c_core(arguments[i][j]);
 			array = array.concat(development);
@@ -38,24 +38,24 @@ function attach(name, values){
     if (name == null || name == "") {
         return;
     }
-    
+
 	values = [name].concat(values);
 
 	if (! LOG_TEXT_REFERENCES[name]){
 		LOG_TEXT_REFERENCES[name] = [];
 	}
-	
+
 	for (var i = 0; i < values.length; i++) {
 		var value = values[i];
         if (value && value != "") {
             if (window[value]) {
                 LOG_TEXT_REFERENCES[name].push(value);
-            } 
+            }
         }
 	}
 
 	window[name] = c(values);
-	LOG_TEXT_KEYS[name] = window[name];	
+	LOG_TEXT_KEYS[name] = window[name];
 }
 
 function preloadAndCheck(url, data) {
@@ -63,7 +63,7 @@ function preloadAndCheck(url, data) {
 	image.src = url;
 	image.id = url;
 	image.onerror = function() {
-		console.error('!!!!!!!!!! Invalid image: ' + url + ' - ' + data);		
+		console.error('!!!!!!!!!! Invalid image: ' + url + ' - ' + data);
 	};
 
     return url;
@@ -74,7 +74,7 @@ function preloadAndCheck(url, data) {
 // ---------------- stickers loading -------------------------------------------
 // -----------------------------------------------------------------------------
 
-function randomizeStickers() {		
+function randomizeStickers() {
 	for (keyword in stickers_indexed) {
 		var list = [];
 		for (let sticker_url of stickers_indexed[keyword]){
@@ -83,25 +83,25 @@ function randomizeStickers() {
 				pos = Math.floor(Math.random() * (stickers_indexed[keyword].length));
 			}
 			list[pos] = sticker_url;
-		} 
-		
+		}
+
 		stickers_indexed[keyword] = [];
-		
+
 		for (var i = 0; i < Math.min(MAX_STICKERS_AT_ONCE, list.length); i++) {
 			stickers_indexed[keyword].push(list[i]);
 		}
 	}
-	
+
 	console.log(">> STICKER DICTIONARY RANDOMIZED");
 }
 
 function populateStickersFromFile(stickers_file) {
-	var lines = stickers_file.split('\n'); 
+	var lines = stickers_file.split('\n');
 	for(var l_i = 1; l_i < lines.length; l_i++){
 		var line = lines[l_i].split(',');
-		var url = line[2];
-		var rest = line.slice(7, line.length);
-		
+		var url = line[0];
+		var rest = line.slice(1, line.length);
+
 		for (i = 0; i < rest.length; i++){
 			keywords = c(rest[i]);
 			for (j = 0; j < keywords.length; j++){
@@ -113,26 +113,25 @@ function populateStickersFromFile(stickers_file) {
 					stickers_indexed[keyword] = [];
 				}
 				stickers_indexed[keyword].push(preloadAndCheck(url, keyword));
-				
+
 				if(! LOG_IMAGES[url]){
-					LOG_IMAGES[url] = new Set();                                
+					LOG_IMAGES[url] = new Set();
 				}
 				LOG_IMAGES[url].add(keyword);
-			
 			}
 		}
-		
+
 	}
 	console.log(">> STICKER DICTIONARY LOADED");
 	randomizeStickers();
 }
 
 function loadStickersIndex() {
-	// CSV FORMAT (with headers): _, _, C=URL, _, _, _, _, H=category, _, J=word, word, word...
-    stickers_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=1908018653&single=true&output=csv";
+	// CSV FORMAT (with headers): URL, word, word, word...
+    stickers_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=1525517825&single=true&output=csv";
     stickers_file = new XMLHttpRequest();
 	stickers_file.onreadystatechange = function() {
-		if (stickers_file.readyState == XMLHttpRequest.DONE) {                
+		if (stickers_file.readyState == XMLHttpRequest.DONE) {
 			if(stickers_file.status === 200 || stickers_file.status == 0)
 			{
 				populateStickersFromFile(stickers_file.responseText);
@@ -152,7 +151,7 @@ function loadStickersIndex() {
 // -----------------------------------------------------------------------------
 
 function populateKeywordsFromFile(keywords_file) {
-	var lines = keywords_file.split('\n'); 
+	var lines = keywords_file.split('\n');
 	for(var l_i = 1; l_i < lines.length; l_i++){
 		var line = lines[l_i].split(',');
 		attach(line[0], line.slice(1, line.length));
@@ -162,11 +161,11 @@ function populateKeywordsFromFile(keywords_file) {
 }
 
 function loadKeywords() {
-	// CSV FORMAT (with headers): A=KEY, _, _, D=word, word, word...
+	// CSV FORMAT (with headers): KEY, word, word, word...
 	keywords_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=312853833&single=true&output=csv";
 	keywords_file = new XMLHttpRequest();
 	keywords_file.onreadystatechange = function() {
-		if (keywords_file.readyState == XMLHttpRequest.DONE) {                
+		if (keywords_file.readyState == XMLHttpRequest.DONE) {
 			if(keywords_file.status === 200 || keywords_file.status == 0) {
 				populateKeywordsFromFile(keywords_file.responseText);
 			}
@@ -213,20 +212,20 @@ function print_logmap(key, visibility){
         return "";
 	}
 	var stickers = stickers_indexed[LOG_TEXT_KEYS[key][0]];
-    
+
     html = "";
 	html += "<tr><td style='padding:5px;width:100px;'>";
-	html += key + " (" + stickers.size + ")";	
+	html += key + " (" + stickers.size + ")";
 	html += "</td><td style='padding:5px;width:50px;'>";
 	html += LOG_TEXT_KEYS[key];
 
 	html += print_dependencies(key);
 
 	html += "</td></tr>";
-	html += "<tr id='" + key + "' style='visibility:" + visibility + ";'><td colspan='2'><div>";	
+	html += "<tr id='" + key + "' style='visibility:" + visibility + ";'><td colspan='2'><div>";
 	for (let sticker_url of stickers){
 		html += "<img src='" + sticker_url + "' width='100px' />";
-	} 
+	}
 	html += "</div></td></tr>";
     return html;
 }
@@ -242,8 +241,8 @@ function populateAdminKeywords(){
         for (key in LOG_TEXT_KEYS) {
             html += print_logmap(key, "collapse");
         }
-        html += "</table>";        
-        
+        html += "</table>";
+
         html += "<h1>No stickers indexed</h1>";
         for (key in LOG_TEXT_KEYS) {
             if (key && !stickers_indexed[LOG_TEXT_KEYS[key][0]]){
@@ -251,14 +250,14 @@ function populateAdminKeywords(){
                 html += ",";
             }
         }
-        
+
         admin_div.innerHTML = html;
         console.log(">> admin console loaded");
     }
 }
 
 
-function populateAdminExpanded(){    
+function populateAdminExpanded(){
     var admin_div = document.getElementById('yo252yo_extension_admin_expanded_stickers');
     if (admin_div){
         var html = "";
@@ -274,10 +273,10 @@ function populateAdminExpanded(){
     }
 }
 
-function populateAdminAll(){ 
+function populateAdminAll(){
     var admin_div = document.getElementById('yo252yo_extension_admin_all_stickers');
     if (admin_div){
-        var html = "";        
+        var html = "";
         html += "<h1>All stickers</h1>";
         html += "<table border=1>";
         html += "<tr><td style='padding:5px;'>KEYWORD</td><td style='padding:5px;'>TRIGGERS</td></tr>";
@@ -292,13 +291,13 @@ function populateAdminAll(){
         admin_div.innerHTML = html;
         console.log(">> admin console loaded");
     }
-}    
+}
 
 window.addEventListener("load", function(){
-	setTimeout(function(){ 
+	setTimeout(function(){
 		populateAdminKeywords();
 		populateAdminExpanded();
-		populateAdminAll();    
+		populateAdminAll();
 	}, 3000);
 }, false);
 
@@ -310,11 +309,11 @@ window.addEventListener("load", function(){
 if(chrome.windows){
 	console.log("create listener");
 	chrome.windows.onCreated.addListener(function(window){
-		console.log("preloading images");				
+		console.log("preloading images");
 		for (keyword in stickers_indexed) {
 			for (var i = 0; i < stickers_indexed[keyword].length; i++) {
 				preloadAndCheck(stickers_indexed[keyword][i], keyword);
-			} 
+			}
 		}
 	});
 }
