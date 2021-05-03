@@ -1,9 +1,9 @@
 {
   "name": "Yo Stickers!!",
   "permissions": [ "clipboardWrite", "clipboardRead", "webRequestBlocking", "tabs"],
-  
+
   "description": "my stickers ;)",
-  "version": "1.1",
+  "version": "1.20",
   "manifest_version": 2,
   "options_page": "options.html",
   "background": {
