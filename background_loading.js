@@ -113,7 +113,7 @@ function randomizeStickers() {
 // CSV FORMAT (with headers): URL, word, word, word...
 function populateStickersFromFile(stickers_file) {
 	var lines = stickers_file.split('\n');
-	for(var l_i = 1; l_i < lines.length; l_i++){
+	for(var l_i = 0; l_i < lines.length; l_i++){
 		var line = lines[l_i].split(',');
 		var url = line[0];
 		var rest = line.slice(1, line.length);
@@ -146,14 +146,13 @@ function populateStickersFromFile(stickers_file) {
 }
 
 function loadStickersIndex() {
-  loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=1525517825&single=true&output=csv",
-          populateStickersFromFile);
+  loadCSV(STICKERS_CSV, populateStickersFromFile);
 }
 
 // CSV FORMAT (with headers): KEY, word, word, word...
 function populateKeywordsFromFile(keywords_file) {
 	var lines = keywords_file.split('\n');
-	for(var l_i = 1; l_i < lines.length; l_i++){
+	for(var l_i = 0; l_i < lines.length; l_i++){
 		var line = lines[l_i].split(',');
 		attach(line[0], line.slice(1, line.length));
 	}
@@ -162,12 +161,20 @@ function populateKeywordsFromFile(keywords_file) {
 }
 
 function loadKeywords() {
-	loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NUWXuTyIx9ds4ZXOue5LJ7u7HRyoBNfCPEMFMuF7hk7AdUzGz6JSqgUYYbORnrv78zBLOULufBfX/pub?gid=312853833&single=true&output=csv",
-          populateKeywordsFromFile);
+	loadCSV(KEYWORDS_CSV, populateKeywordsFromFile);
 }
 
-loadKeywords();
+KEYWORDS_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIxCFi4KCY6IvBPoHJJBu1KtPoHiZGQPChPHqzpfg0YxzM4BaKSBoFFoGf09kmVkhLsQ6vbLEsKBbJ/pub?gid=0&single=true&output=csv";
+STICKERS_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIxCFi4KCY6IvBPoHJJBu1KtPoHiZGQPChPHqzpfg0YxzM4BaKSBoFFoGf09kmVkhLsQ6vbLEsKBbJ/pub?gid=2145090485&single=true&output=csv";
 
+chrome.storage.sync.get({
+  stickersCSV: STICKERS_CSV,
+  keywordsCSV: KEYWORDS_CSV
+}, function(items) {
+  KEYWORDS_CSV = items.keywordsCSV;
+  STICKERS_CSV = items.stickersCSV;
+  loadKeywords();
+});
 
 // -----------------------------------------------------------------------------
 // HACK: Listeners -------------------------------------------------------------
