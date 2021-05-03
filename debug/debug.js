@@ -45,7 +45,7 @@ function print_logmap(key, visibility){
 }
 
 
-function populateinitDivDebugKeywords(){
+function populateDebugKeywords(){
   var debug_div = document.getElementById('yo252yo_extension_debug_keywords');
   if (!debug_div){
     return false;
@@ -55,13 +55,8 @@ function populateinitDivDebugKeywords(){
   html += "<h1>Keyword map</h1>";
   html += "<table border=1>";
   html += "<tr><td style='padding:5px;'>KEYWORD</td><td style='padding:5px;'>TRIGGERS</td></tr>";
-  var i = 0;
   for (key in LOG_TEXT_KEYS) {
-    i++;
     html += print_logmap(key, "collapse");
-  }
-  if(i == 0){
-    return false;
   }
   html += "</table>";
 
@@ -72,13 +67,15 @@ function populateinitDivDebugKeywords(){
           html += ",";
       }
   }
-
+  if(html.length < 2000){
+    return false;
+  }
   debug_div.innerHTML = html;
   return true;
 }
 
 
-function populateinitDivDebugExpanded(){
+function populateDebugExpanded(){
   var debug_div = document.getElementById('yo252yo_extension_debug_expanded_stickers');
   if (!debug_div){
     return false;
@@ -88,20 +85,18 @@ function populateinitDivDebugExpanded(){
   html += "<h1>Expanded map</h1>";
   html += "<table border=1>";
   html += "<tr><td style='padding:5px;'>KEYWORD</td><td style='padding:5px;'>TRIGGERS</td></tr>";
-  var i = 0;
   for (key in LOG_TEXT_KEYS) {
-    i ++;
     html += print_logmap(key, "visible");
   }
-  if(i == 0){
+  html += "</table>";
+  if(html.length < 200){
     return false;
   }
-  html += "</table>";
   debug_div.innerHTML = html;
   return true;
 }
 
-function populateinitDivDebugAll(){
+function populateDebugAll(){
   var debug_div = document.getElementById('yo252yo_extension_debug_all_stickers');
   if (!debug_div){
     return false;
@@ -111,26 +106,27 @@ function populateinitDivDebugAll(){
   html += "<h1>All stickers</h1>";
   html += "<table border=1>";
   html += "<tr><td style='padding:5px;'>KEYWORD</td><td style='padding:5px;'>TRIGGERS</td></tr>";
-  var i = 0;
   for (sticker in LOG_IMAGES) {
-    i++;
     html += "<tr><td style='padding:5px;width:100px;'><img src='";
     html += sticker;
     html += "' width='100px' /></td><td style='padding:5px;width:50px;'>";
     html += Array.from(LOG_IMAGES[sticker]);
     html += "</td></tr>";
   }
-  if(i == 0){
+  html += "</table>";
+
+  console.log(html.length);
+  if(html.length < 200){
     return false;
   }
-  html += "</table>";
+
   debug_div.innerHTML = html;
   return true;
 }
 
 var tryRender = function() {
   console.log("Try render");
-  if (populateinitDivDebugKeywords() || populateinitDivDebugExpanded() || populateinitDivDebugAll()){
+  if (populateDebugKeywords() || populateDebugExpanded() || populateDebugAll()){
   console.log("Debug rendered");
     return;
   }
