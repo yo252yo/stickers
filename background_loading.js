@@ -128,7 +128,10 @@ function populateStickersFromFile(stickers_file) {
 				if (!stickers_indexed[keyword]){
 					stickers_indexed[keyword] = [];
 				}
-				stickers_indexed[keyword].push(preloadAndCheck(url, keyword));
+        url = preloadAndCheck(url, keyword);
+        if(! stickers_indexed[keyword].includes(url)){
+  				stickers_indexed[keyword].push(url);
+        }
 
 				if(! LOG_IMAGES[url]){
 					LOG_IMAGES[url] = new Set();
