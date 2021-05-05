@@ -59,6 +59,9 @@ function attach(name, values){
 }
 
 function preloadAndCheck(url, data) {
+  if (!url){
+    return url;
+  }
 	image = new Image();
 	image.src = url;
 	image.id = url;
